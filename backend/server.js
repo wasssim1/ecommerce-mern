@@ -20,7 +20,6 @@ mongoose.connect(process.env.MONGODB_URL || 'mongodb://localhost/e-commerceMERN'
 });
 
 app.use('/api/uploads', uploadRouter);
-
 app.use('/api/users', userRouter);
 app.use('/api/products', productRouter);
 app.use('/api/orders', orderRouter);
@@ -30,10 +29,11 @@ app.get('/api/config/paypal', (req, res) => {
 
 const __dirname = path.resolve();
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
-
-app.get('/', (req, res) => {
-    res.send('Server is ready!')
-});
+app.use(express.static(path.join(__dirname, '/frontend/build')));
+app.get('*', (req, res) => res.sendfile(path.join(__dirname, '/frontend/build/index.html')));
+// app.get('/', (req, res) => {
+//     res.send('Server is ready!')
+// });
 
 app.use((err, req, res, next) => {
     res.status(500).send({message: err.message})
